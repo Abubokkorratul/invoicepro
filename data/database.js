@@ -1,4 +1,4 @@
-// data/database.js - Updated with Trash System
+// data/database.js - Updated with Trash System for GitHub Pages
 
 class InvoiceProDB {
     constructor() {
@@ -9,7 +9,7 @@ class InvoiceProDB {
     initDatabase() {
         if (!localStorage.getItem(this.dbName)) {
             const initialData = {
-                version: '3.1.0', // Updated version
+                version: '3.1.0', // Updated version for Trash System
                 lastUpdated: new Date().toISOString(),
                 users: [
                     {
@@ -33,7 +33,7 @@ class InvoiceProDB {
                 invoices: [],
                 clients: [],
                 products: [],
-                categories: [], // Added categories array if you need it later
+                categories: [], 
                 activities: [],
                 settings: {
                     appName: 'InvoicePro',
@@ -47,7 +47,8 @@ class InvoiceProDB {
         }
     }
 
-    // Core operations
+    // --- Core Operations ---
+    
     save(data) {
         try {
             if (!data) return false;
@@ -56,6 +57,10 @@ class InvoiceProDB {
             return true;
         } catch (error) {
             console.error('❌ Database save error:', error);
+            // Check for quota exceeded error (storage full)
+            if (error.name === 'QuotaExceededError' || error.message.includes('Quota')) {
+                alert("⚠️ Storage Full! Your browser's local storage is full.\nPlease delete old items or reduce image sizes.");
+            }
             return false;
         }
     }
@@ -80,7 +85,7 @@ class InvoiceProDB {
 
     /**
      * Move an item to trash (Soft Delete)
-     * @param {string} collectionName - 'clients', 'invoices', 'products', 'categories'
+     * @param {string} collectionName - 'clients', 'invoices', 'products'
      * @param {string} id - The ID of the item to delete
      */
     moveToTrash(collectionName, id) {
@@ -100,8 +105,6 @@ class InvoiceProDB {
             
             const saved = this.save(db);
             if (saved) {
-                // Log activity
-                // Note: You might need to fetch userId from the item if available, or pass it in
                 console.log(`🗑️ Moved ${id} to trash in ${collectionName}`);
             }
             return saved;
@@ -209,7 +212,10 @@ class InvoiceProDB {
             timestamp: new Date().toISOString()
         };
         db.activities.unshift(activity);
+        
+        // Keep only last 100 activities to save space
         if (db.activities.length > 100) db.activities = db.activities.slice(0, 100);
+        
         this.save(db);
     }
 
