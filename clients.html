@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clients - InvoicePro</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Smart Table Styling */
+        .table-responsive {
+            overflow-x: auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .smart-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        .smart-table thead th {
+            background: #f8f9fa;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #444;
+            border-bottom: 2px solid #eee;
+        }
+
+        .smart-table tbody tr {
+            border-bottom: 1px solid #f0f0f0;
+            transition: background 0.2s;
+        }
+
+        .smart-table tbody tr:hover {
+            background-color: #f9faff;
+        }
+
+        .smart-table td {
+            padding: 12px 15px;
+            vertical-align: middle;
+            color: #555;
+        }
+
+        .profile-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .table-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .table-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .client-name-text { font-weight: 600; color: #333; display: block; }
+        .client-company-text { font-size: 12px; color: #888; }
+
+        .inv-count-badge {
+            background: #eff6ff;
+            color: #1d4ed8;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 700;
+            display: inline-block;
+        }
+
+        .action-btn {
+            padding: 6px 10px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #555;
+            transition: all 0.2s;
+            margin-right: 4px;
+        }
+        .action-btn:hover { background: #f0f0f0; color: #333; }
+        .action-btn.delete:hover { background: #fee2e2; border-color: #ef4444; color: #ef4444; }
+    </style>
+</head>
+<body>
+    <style>
+        /* CSS to stack Trash and Logout buttons */
+        .sidebar-footer {
+            display: flex;
+            flex-direction: column; /* Stacks items vertically */
+            gap: 8px; /* Space between buttons */
+            padding: 20px;
+            border-top: 1px solid #eee;
+            margin-top: auto; /* Pushes footer to bottom */
+        }
+
+        /* Style for the new Trash Link to match sidebar style */
+        .trash-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 15px;
+            color: #666;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .trash-link:hover {
+            background-color: #fee2e2;
+            color: #ef4444; /* Red color on hover */
+        }
+
+        .trash-link i {
+            width: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-receipt"></i> InvoicePro</h2>
+                <div class="user-info">
+                    <div class="user-avatar" id="companyAvatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-details">
+                        <span class="user-name" id="userName">Loading...</span>
+                        <span class="user-email" id="userEmail">...</span>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="nav-item active">
+                        <a href="dashboard.html" class="nav-link">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="invoices.html" class="nav-link">
+                            <i class="fas fa-file-invoice"></i>
+                            <span>Invoices</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="products.html" class="nav-link">
+                            <i class="fas fa-box"></i>
+                            <span>Products</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="clients.html" class="nav-link">
+                            <i class="fas fa-users"></i>
+                            <span>Clients</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="reports.html" class="nav-link">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Reports</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="settings.html" class="nav-link">
+                            <i class="fas fa-cog"></i>
+                            <span>Settings</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <a href="trash.html" class="trash-link">
+                    <i class="fas fa-trash-alt"></i>
+                    <span>Recycle Bin</span>
+                </a>
+                
+                <button id="logoutBtn" class="btn btn-logout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="main-header">
+                <div class="header-left">
+                    <button class="menu-toggle"><i class="fas fa-bars"></i></button>
+                    <h1>Clients Management</h1>
+                </div>
+                <div class="header-right">
+                    <a href="client-add.html" class="btn btn-primary"><i class="fas fa-plus"></i> Add New Client</a>
+                    <button class="btn btn-outline" id="exportClientsBtn"><i class="fas fa-download"></i> Export</button>
+                </div>
+            </header>
+
+            <div class="clients-content">
+                <div class="clients-toolbar">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="clientSearch" placeholder="Search clients...">
+                    </div>
+                    <div class="filter-options">
+                        <select id="invoiceFilter" class="filter-select">
+                            <option value="all">All Clients</option>
+                            <option value="with_invoice">With Invoices</option>
+                            <option value="no_invoice">No Invoices</option>
+                        </select>
+                        <select id="sortFilter" class="filter-select">
+                            <option value="newest">Newest First</option>
+                            <option value="oldest">Oldest First</option>
+                            <option value="high_invoice">Highest Invoices</option>
+                            <option value="low_invoice">Lowest Invoices</option>
+                            <option value="name_asc">Name (A-Z)</option>
+                            <option value="name_desc">Name (Z-A)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="clients-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon primary"><i class="fas fa-users"></i></div>
+                        <div class="stat-info"><span class="stat-label">Total Clients</span><span class="stat-value" id="totalClientsCount">0</span></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon info"><i class="fas fa-file-invoice"></i></div>
+                        <div class="stat-info"><span class="stat-label">Total Invoices</span><span class="stat-value" id="totalInvoicesCount">0</span></div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Client List</h3>
+                        <div class="actions">
+                            <button class="btn btn-sm btn-outline" id="refreshClientsBtn">
+                                <i class="fas fa-sync-alt"></i> Refresh
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="smart-table">
+                                <thead>
+                                    <tr>
+                                        <th width="5%">#</th>
+                                        <th width="30%">Client Profile</th>
+                                        <th width="25%">Contact Info</th>
+                                        <th width="15%" style="text-align: center;">Invoices</th>
+                                        <th width="15%">Created</th>
+                                        <th width="10%" style="text-align: right;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="clientsTableBody">
+                                    </tbody>
+                            </table>
+                        </div>
+                        <div id="emptyStateContainer" style="display:none; text-align: center; padding: 40px;">
+                            <i class="fas fa-users" style="font-size: 48px; color: #ddd; margin-bottom: 15px;"></i>
+                            <p style="color: #666;">No clients found.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="data/database.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/clients.js"></script>
+</body>
+</html>

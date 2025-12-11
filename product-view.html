@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Product - InvoicePro</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-receipt"></i> InvoicePro</h2>
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <div class="user-details">
+                        <span class="user-name" id="userName">Loading...</span>
+                        <span class="user-email" id="userEmail">...</span>
+                    </div>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="nav-item">
+                        <a href="dashboard.html" class="nav-link">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="products.html" class="nav-link">
+                            <i class="fas fa-box"></i>
+                            <span>Products</span>
+                        </a>
+                    </li>
+                    <li class="nav-item active">
+                        <a href="product-view.html" class="nav-link">
+                            <i class="fas fa-eye"></i>
+                            <span>View Product</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <button id="logoutBtn" class="btn btn-logout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="main-header">
+                <div class="header-left">
+                    <button class="menu-toggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1><i class="fas fa-eye"></i> Product Details</h1>
+                    <div class="header-subtitle" id="productTitle">Loading...</div>
+                </div>
+                <div class="header-right">
+                    <div class="header-actions">
+                        <a href="products.html" class="btn btn-outline">
+                            <i class="fas fa-arrow-left"></i> Back to Products
+                        </a>
+                        <a href="#" class="btn btn-primary" id="editBtn">
+                            <i class="fas fa-edit"></i> Edit Product
+                        </a>
+                        <button class="btn btn-success" id="createInvoiceBtn">
+                            <i class="fas fa-file-invoice"></i> Create Invoice
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Product Details -->
+            <div class="product-view">
+                <!-- Product Header -->
+                <div class="product-header">
+                    <div class="product-image">
+                        <i class="fas fa-box fa-4x"></i>
+                    </div>
+                    <div class="product-info">
+                        <h2 id="viewProductName">Loading...</h2>
+                        <div class="product-meta">
+                            <span class="badge" id="viewProductStatus">Loading</span>
+                            <span class="product-sku" id="viewProductSKU">SKU: Loading...</span>
+                            <span class="product-category" id="viewProductCategory">Category: Loading...</span>
+                        </div>
+                        <div class="product-price">
+                            <h3 id="viewProductPrice">৳ 0.00</h3>
+                            <small>Price per unit</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabs -->
+                <div class="product-tabs">
+                    <div class="tab-buttons">
+                        <button class="tab-btn active" data-tab="overview">Overview</button>
+                        <button class="tab-btn" data-tab="pricing">Pricing</button>
+                        <button class="tab-btn" data-tab="inventory">Inventory</button>
+                        <button class="tab-btn" data-tab="usage">Invoice Usage</button>
+                    </div>
+                    
+                    <div class="tab-content">
+                        <!-- Overview Tab -->
+                        <div class="tab-pane active" id="overviewTab">
+                            <div class="info-grid">
+                                <div class="info-card">
+                                    <h4><i class="fas fa-align-left"></i> Description</h4>
+                                    <p id="viewProductDescription">No description provided.</p>
+                                </div>
+                                <div class="info-card">
+                                    <h4><i class="fas fa-star"></i> Features</h4>
+                                    <ul id="viewProductFeatures">
+                                        <li>No features specified</li>
+                                    </ul>
+                                </div>
+                                <div class="info-card">
+                                    <h4><i class="fas fa-info-circle"></i> Basic Information</h4>
+                                    <table class="info-table">
+                                        <tr>
+                                            <td>Product Type:</td>
+                                            <td id="viewProductType">Loading...</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Brand:</td>
+                                            <td id="viewProductBrand">Not specified</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Model:</td>
+                                            <td id="viewProductModel">Not specified</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Unit:</td>
+                                            <td id="viewProductUnit">Not specified</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Warranty:</td>
+                                            <td id="viewProductWarranty">Not specified</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="info-card">
+                                    <h4><i class="fas fa-sticky-note"></i> Internal Notes</h4>
+                                    <p id="viewProductNotes">No internal notes.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Pricing Tab -->
+                        <div class="tab-pane" id="pricingTab">
+                            <div class="info-grid">
+                                <div class="info-card">
+                                    <h4><i class="fas fa-money-bill-wave"></i> Price Details</h4>
+                                    <table class="info-table">
+                                        <tr>
+                                            <td>Selling Price:</td>
+                                            <td id="viewSellingPrice">৳ 0.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Cost Price:</td>
+                                            <td id="viewCostPrice">৳ 0.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Profit Margin:</td>
+                                            <td id="viewProfitMargin">0%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Tax Rate:</td>
+                                            <td id="viewTaxRate">0%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Discount:</td>
+                                            <td id="viewDiscount">0%</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="info-card">
+                                    <h4><i class="fas fa-calculator"></i> Profit Calculation</h4>
+                                    <div class="profit-calc">
+                                        <div class="calc-item">
+                                            <span>Cost:</span>
+                                            <span id="calcCost">৳ 0</span>
+                                        </div>
+                                        <div class="calc-item">
+                                            <span>Tax:</span>
+                                            <span id="calcTax">৳ 0</span>
+                                        </div>
+                                        <div class="calc-item total">
+                                            <span>Net Profit:</span>
+                                            <span id="calcProfit">৳ 0</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Inventory Tab -->
+                        <div class="tab-pane" id="inventoryTab">
+                            <div class="info-grid">
+                                <div class="info-card">
+                                    <h4><i class="fas fa-boxes"></i> Stock Information</h4>
+                                    <div class="stock-level">
+                                        <div class="stock-label">Current Stock:</div>
+                                        <div class="stock-value" id="viewStockLevel">0 units</div>
+                                    </div>
+                                    <div class="stock-alert" id="stockAlert">
+                                        <!-- Alert message will appear here -->
+                                    </div>
+                                    <div class="stock-history">
+                                        <h5>Recent Stock Changes</h5>
+                                        <div id="stockHistory">No stock history available.</div>
+                                    </div>
+                                </div>
+                                <div class="info-card">
+                                    <h4><i class="fas fa-chart-line"></i> Inventory Settings</h4>
+                                    <table class="info-table">
+                                        <tr>
+                                            <td>Track Inventory:</td>
+                                            <td id="viewTrackInventory">No</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Low Stock Alert:</td>
+                                            <td id="viewLowStockAlert">Not set</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Allow Backorders:</td>
+                                            <td id="viewAllowBackorders">No</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Last Updated:</td>
+                                            <td id="viewLastUpdated">Never</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Usage Tab -->
+                        <div class="tab-pane" id="usageTab">
+                            <div class="info-grid">
+                                <div class="info-card">
+                                    <h4><i class="fas fa-file-invoice"></i> Invoice Statistics</h4>
+                                    <table class="info-table">
+                                        <tr>
+                                            <td>Total Invoices:</td>
+                                            <td id="totalInvoices">0</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Total Quantity Sold:</td>
+                                            <td id="totalQuantity">0 units</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Total Revenue:</td>
+                                            <td id="totalRevenue">৳ 0.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Last Used:</td>
+                                            <td id="lastUsed">Never</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="info-card">
+                                    <h4><i class="fas fa-history"></i> Recent Invoices</h4>
+                                    <div id="recentInvoices">
+                                        <p class="text-muted">This product has not been used in any invoices yet.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+<!-- Before closing </body> tag -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="data/database.js"></script>
+<script src="js/app.js"></script>
+<script src="js/product-view.js"></script>
+</body>
+</html>

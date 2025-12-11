@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Invoice - InvoicePro</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/setting.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- Specific Styles for Invoice Generator --- */
+        
+        /* Layout Grid */
+        .invoice-grid { display: grid; grid-template-columns: 3fr 1fr; gap: 24px; }
+        .invoice-main { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); padding: 30px; }
+        .invoice-sidebar { display: flex; flex-direction: column; gap: 20px; }
+
+        /* Sections */
+        .inv-section { margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px dashed var(--border-color); }
+        .inv-section:last-child { border-bottom: none; }
+        
+        /* Header */
+        .inv-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px; }
+        .inv-title-block h2 { color: var(--primary-color); font-size: 1.8rem; margin-bottom: 5px; }
+        .inv-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; text-align: right; }
+        .inv-meta label { display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 4px; }
+        .inv-meta input { text-align: right; padding: 8px; width: 140px; }
+
+        /* Company & Client Box */
+        .address-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 30px; }
+        .addr-box h4 { font-size: 0.9rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px; border-bottom: 2px solid var(--border-color); padding-bottom: 5px; display: inline-block; }
+        .company-display { font-size: 0.95rem; line-height: 1.5; color: var(--text-color); }
+        .company-display strong { font-size: 1.1rem; color: var(--primary-color); display: block; margin-bottom: 4px; }
+        
+        /* Client Smart Search */
+        .client-search-wrapper { position: relative; }
+        .client-inputs { margin-top: 15px; display: none; background: var(--light-bg); padding: 15px; border-radius: 8px; animation: slideDown 0.3s ease; }
+        .client-inputs.active { display: block; }
+        
+        /* Product Table */
+        .inv-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        .inv-table th { background: var(--secondary-color); padding: 12px 10px; text-align: left; font-size: 0.85rem; color: var(--text-muted); font-weight: 600; border-radius: 4px 4px 0 0; }
+        .inv-table td { padding: 10px; border-bottom: 1px solid var(--border-color); vertical-align: top; }
+        .inv-table input { border: 1px solid transparent; background: transparent; padding: 6px; width: 100%; transition: all 0.2s; font-size: 0.9rem; }
+        .inv-table input:focus, .inv-table input:hover { background: var(--white); border-color: var(--border-color); border-radius: 4px; }
+        .inv-table .num-input { text-align: right; }
+        .btn-remove-row { color: #ef4444; background: none; border: none; cursor: pointer; padding: 5px; opacity: 0.6; transition: 0.2s; }
+        .btn-remove-row:hover { opacity: 1; background: #fee2e2; border-radius: 4px; }
+
+        /* Product Smart Search */
+        .product-search-row { background: var(--light-bg); padding: 15px; border-radius: 8px; display: flex; gap: 10px; align-items: center; position: relative; }
+        .search-dropdown { position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid var(--border-color); border-radius: 0 0 8px 8px; max-height: 250px; overflow-y: auto; z-index: 100; box-shadow: var(--shadow); display: none; }
+        .search-item { padding: 10px 15px; cursor: pointer; display: flex; justify-content: space-between; border-bottom: 1px solid var(--light-bg); }
+        .search-item:hover { background: var(--secondary-color); }
+        .search-item .badge { font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; background: #e0e7ff; color: var(--primary-color); }
+
+        /* Summary Section */
+        .summary-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 30px; margin-top: 20px; }
+        .notes-area label { font-weight: 600; color: var(--text-muted); font-size: 0.9rem; }
+        .notes-area textarea { width: 100%; border: 1px solid var(--border-color); border-radius: 6px; padding: 10px; font-size: 0.9rem; margin-top: 5px; }
+        
+        .totals-area { background: var(--light-bg); padding: 20px; border-radius: 8px; }
+        .total-line { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.95rem; }
+        .total-line.grand-total { font-weight: 700; font-size: 1.2rem; color: var(--primary-color); border-top: 1px solid var(--border-color); padding-top: 10px; margin-top: 10px; }
+        .amount-words { font-size: 0.85rem; color: var(--text-muted); font-style: italic; margin-top: 8px; text-align: right; }
+
+        /* Warranty Warning Box */
+        .warranty-box { background: #fffbeb; border: 1px solid #fcd34d; border-radius: 6px; padding: 15px; margin-top: 20px; }
+        .warranty-box h5 { color: #b45309; margin-bottom: 5px; display: flex; align-items: center; gap: 8px; }
+        .warranty-box textarea { width: 100%; background: transparent; border: none; font-size: 0.9rem; color: #78350f; resize: none; }
+
+        /* Sidebar Cards */
+        .action-card { background: var(--white); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); margin-bottom: 20px; }
+        .action-card h4 { margin-bottom: 15px; font-size: 1rem; color: var(--text-color); }
+        .btn-full { width: 100%; margin-bottom: 10px; justify-content: center; }
+
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Responsive */
+        @media (max-width: 992px) { .invoice-grid { grid-template-columns: 1fr; } .invoice-sidebar { flex-direction: row; } .address-grid { grid-template-columns: 1fr; gap: 20px; } }
+    </style>
+</head>
+<body>
+
+    <style>
+        /* CSS to stack Trash and Logout buttons */
+        .sidebar-footer {
+            display: flex;
+            flex-direction: column; /* Stacks items vertically */
+            gap: 8px; /* Space between buttons */
+            padding: 20px;
+            border-top: 1px solid #eee;
+            margin-top: auto; /* Pushes footer to bottom */
+        }
+
+        /* Style for the new Trash Link to match sidebar style */
+        .trash-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 15px;
+            color: #666;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .trash-link:hover {
+            background-color: #fee2e2;
+            color: #ef4444; /* Red color on hover */
+        }
+
+        .trash-link i {
+            width: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-receipt"></i> InvoicePro</h2>
+                <div class="user-info">
+                    <div class="user-avatar" id="companyAvatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-details">
+                        <span class="user-name" id="userName">Loading...</span>
+                        <span class="user-email" id="userEmail">...</span>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="nav-item active">
+                        <a href="dashboard.html" class="nav-link">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="invoices.html" class="nav-link">
+                            <i class="fas fa-file-invoice"></i>
+                            <span>Invoices</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="products.html" class="nav-link">
+                            <i class="fas fa-box"></i>
+                            <span>Products</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="clients.html" class="nav-link">
+                            <i class="fas fa-users"></i>
+                            <span>Clients</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="reports.html" class="nav-link">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Reports</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="settings.html" class="nav-link">
+                            <i class="fas fa-cog"></i>
+                            <span>Settings</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <a href="trash.html" class="trash-link">
+                    <i class="fas fa-trash-alt"></i>
+                    <span>Recycle Bin</span>
+                </a>
+                
+                <button id="logoutBtn" class="btn btn-logout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </aside>
+
+
+
+
+
+        <main class="main-content">
+            <header class="main-header">
+                <div class="header-left">
+                    <button class="menu-toggle"><i class="fas fa-bars"></i></button>
+                    <h1><i class="fas fa-pen-nib"></i> New Invoice</h1>
+                </div>
+                <div class="header-right">
+                    <a href="dashboard.html" class="btn btn-outline"><i class="fas fa-times"></i> Cancel</a>
+                </div>
+            </header>
+
+            <div class="settings-container">
+                <form id="invoiceForm" class="invoice-grid">
+                    
+                    <div class="invoice-main">
+                        <div class="inv-header">
+                            <div class="inv-title-block">
+                                <h2>INVOICE</h2>
+                                <p class="text-muted">Create a professional invoice</p>
+                            </div>
+                            <div class="inv-meta">
+                                <div><label>Invoice No</label><input type="text" id="invNumber" class="form-control" readonly></div>
+                                <div><label>Date</label><input type="date" id="invDate" class="form-control"></div>
+                                <div><label>Due Date</label><input type="date" id="invDueDate" class="form-control"></div>
+                            </div>
+                        </div>
+
+                        <div class="address-grid">
+                            <div class="addr-box">
+                                <h4>From (Company)</h4>
+                                <div id="companyInfoDisplay" class="company-display">
+                                    <div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading Settings...</div>
+                                </div>
+                            </div>
+
+                            <div class="addr-box">
+                                <h4>Bill To (Client)</h4>
+                                <div class="client-search-wrapper">
+                                    <input type="text" id="clientSearch" class="form-control" placeholder="Search Client or Type New Name..." autocomplete="off">
+                                    <div id="clientDropdown" class="search-dropdown"></div>
+                                </div>
+                                
+                                <div id="clientInputs" class="client-inputs">
+                                    <div class="form-row">
+                                        <div class="form-group"><input type="text" id="clPhone" class="form-control" placeholder="Phone Number"></div>
+                                        <div class="form-group"><input type="email" id="clEmail" class="form-control" placeholder="Email Address"></div>
+                                    </div>
+                                    <div class="form-group"><input type="text" id="clAddress" class="form-control" placeholder="Billing Address"></div>
+                                    <input type="hidden" id="clId" value=""> </div>
+                            </div>
+                        </div>
+
+                        <div class="inv-section">
+                            <table class="inv-table" id="itemsTable">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 35%;">Item Description</th>
+                                        <th style="width: 15%;">Warranty</th>
+                                        <th style="width: 10%; text-align: right;">Qty</th>
+                                        <th style="width: 15%; text-align: right;">Price</th>
+                                        <th style="width: 15%; text-align: right;">Total</th>
+                                        <th style="width: 5%;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="itemsBody">
+                                    </tbody>
+                            </table>
+
+                            <div class="product-search-row">
+                                <i class="fas fa-search text-muted"></i>
+                                <input type="text" id="prodSearch" class="form-control" style="border:none; background:transparent;" placeholder="Search products to add..." autocomplete="off">
+                                <button type="button" class="btn btn-outline btn-sm" onclick="addManualRow()">Add Empty Row</button>
+                                <div id="prodDropdown" class="search-dropdown"></div>
+                            </div>
+                        </div>
+
+                        <div class="summary-grid">
+                            <div class="left-summary">
+                                <div class="notes-area">
+                                    <label>Client Notes</label>
+                                    <textarea id="invNotes" rows="2" placeholder="Thanks for your business..."></textarea>
+                                </div>
+                                <div class="warranty-box">
+                                    <h5><i class="fas fa-shield-alt"></i> Warranty & Terms</h5>
+                                    <textarea id="invWarrantyMsg" rows="4"></textarea>
+                                </div>
+                                <div class="notes-area" style="margin-top: 15px;">
+                                    <label>Finish Line Text</label>
+                                    <input type="text" id="invFinishLine" class="form-control" readonly style="background: #f8fafc;">
+                                </div>
+                            </div>
+
+                            <div class="right-summary">
+                                <div class="totals-area">
+                                    <div class="total-line"><span>Subtotal</span> <span id="valSubtotal">0.00</span></div>
+                                    <div class="total-line"><span>Tax (0%)</span> <span id="valTax">0.00</span></div>
+                                    <div class="total-line"><span>Discount</span> <input type="number" id="valDiscount" class="form-control" style="width:80px; text-align:right; padding:2px;" value="0" oninput="calculateTotals()"></div>
+                                    <div class="total-line grand-total"><span>Total</span> <span id="valTotal">0.00</span></div>
+                                    <div id="amountWords" class="amount-words">Zero Taka Only</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="invoice-sidebar">
+                        <div class="action-card">
+                            <h4>Actions</h4>
+                            <div class="form-group">
+                                <label>Status</label>
+                                <select id="invStatus" class="form-control">
+                                    <option value="Paid">Paid</option>
+                                    <option value="Unpaid" selected>Unpaid</option>
+                                    <option value="Draft">Draft</option>
+                                </select>
+                            </div>
+                            <hr style="border-top:1px solid var(--border-color); margin: 15px 0;">
+                            <button type="button" class="btn btn-secondary btn-full" onclick="saveInvoice('Draft')"><i class="fas fa-save"></i> Save Draft</button>
+                            <button type="button" class="btn btn-primary btn-full" onclick="previewInvoice()"><i class="fas fa-eye"></i> Preview</button>
+                            <button type="button" class="btn btn-success btn-full" onclick="saveInvoice('Final')"><i class="fas fa-check-circle"></i> Create Invoice</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script src="data/database.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/invoice-create.js"></script>
+</body>
+</html>

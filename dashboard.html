@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - InvoicePro</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* CSS to stack Trash and Logout buttons */
+        .sidebar-footer {
+            display: flex;
+            flex-direction: column; /* Stacks items vertically */
+            gap: 8px; /* Space between buttons */
+            padding: 20px;
+            border-top: 1px solid #eee;
+            margin-top: auto; /* Pushes footer to bottom */
+        }
+
+        /* Style for the new Trash Link to match sidebar style */
+        .trash-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 15px;
+            color: #666;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .trash-link:hover {
+            background-color: #fee2e2;
+            color: #ef4444; /* Red color on hover */
+        }
+
+        .trash-link i {
+            width: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-receipt"></i> InvoicePro</h2>
+                <div class="user-info">
+                    <div class="user-avatar" id="companyAvatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-details">
+                        <span class="user-name" id="userName">Loading...</span>
+                        <span class="user-email" id="userEmail">...</span>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="nav-item active">
+                        <a href="dashboard.html" class="nav-link">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="invoices.html" class="nav-link">
+                            <i class="fas fa-file-invoice"></i>
+                            <span>Invoices</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="products.html" class="nav-link">
+                            <i class="fas fa-box"></i>
+                            <span>Products</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="clients.html" class="nav-link">
+                            <i class="fas fa-users"></i>
+                            <span>Clients</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="reports.html" class="nav-link">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Reports</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="settings.html" class="nav-link">
+                            <i class="fas fa-cog"></i>
+                            <span>Settings</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <a href="trash.html" class="trash-link">
+                    <i class="fas fa-trash-alt"></i>
+                    <span>Recycle Bin</span>
+                </a>
+                
+                <button id="logoutBtn" class="btn btn-logout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="main-header">
+                <div class="header-left">
+                    <button class="menu-toggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1>Dashboard</h1>
+                </div>
+                <div class="header-right">
+                    <button class="btn btn-primary" id="newInvoiceBtn">
+                        <i class="fas fa-plus"></i> New Invoice
+                    </button>
+                    <div class="header-actions">
+                        <button class="icon-btn">
+                            <i class="fas fa-bell"></i>
+                            <span class="badge">3</span>
+                        </button>
+                        <button class="icon-btn">
+                            <i class="fas fa-question-circle"></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <div class="dashboard-content">
+                <div class="dashboard-row">
+                    <div class="dashboard-col-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Recent Activity</h3>
+                                <a href="#" class="btn-link" id="viewActivity">View Activity Log</a>
+                            </div>
+                            <div class="card-body">
+                                <div class="activity-list" id="recentActivity">
+                                    <div class="empty-state">
+                                        <i class="fas fa-spinner fa-spin"></i>
+                                        <p>Loading activities...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-col-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>At a Glance</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="glance-stats">
+                                    <div class="stat-item">
+                                        <div class="stat-icon primary">
+                                            <i class="fas fa-money-bill-wave"></i>
+                                        </div>
+                                        <div class="stat-info">
+                                            <span class="stat-label">Total Outstanding</span>
+                                            <span class="stat-value" id="totalOutstanding">0.00 ৳</span>
+                                        </div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-icon danger">
+                                            <i class="fas fa-exclamation-triangle"></i>
+                                        </div>
+                                        <div class="stat-info">
+                                            <span class="stat-label">Total Overdue</span>
+                                            <span class="stat-value" id="totalOverdue">0.00 ৳</span>
+                                        </div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-icon success">
+                                            <i class="fas fa-chart-line"></i>
+                                        </div>
+                                        <div class="stat-info">
+                                            <span class="stat-label">Collected This Year</span>
+                                            <span class="stat-value" id="totalCollected">0.00 ৳</span>
+                                        </div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-icon info">
+                                            <i class="fas fa-users"></i>
+                                        </div>
+                                        <div class="stat-info">
+                                            <span class="stat-label">Clients</span>
+                                            <span class="stat-value" id="totalClients">0</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-row">
+                    <div class="dashboard-col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Quick Stats</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="stats-grid">
+                                    <div class="stat-card">
+                                        <div class="stat-card-icon">
+                                            <i class="fas fa-file-invoice"></i>
+                                        </div>
+                                        <div class="stat-card-content">
+                                            <h4>Total Invoices</h4>
+                                            <p id="totalInvoices">0</p>
+                                        </div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-card-icon">
+                                            <i class="fas fa-box"></i>
+                                        </div>
+                                        <div class="stat-card-content">
+                                            <h4>Total Products</h4>
+                                            <p id="totalProducts">0</p>
+                                        </div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-card-icon">
+                                            <i class="fas fa-check-circle"></i>
+                                        </div>
+                                        <div class="stat-card-content">
+                                            <h4>Paid Invoices</h4>
+                                            <p id="paidInvoices">0</p>
+                                        </div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-card-icon">
+                                            <i class="fas fa-clock"></i>
+                                        </div>
+                                        <div class="stat-card-content">
+                                            <h4>Pending Invoices</h4>
+                                            <p id="pendingInvoices">0</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="data/database.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

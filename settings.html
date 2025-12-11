@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Settings - InvoicePro</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/setting.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Additional specific styles for this page */
+        .smart-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 24px;
+            background: var(--white);
+            border-radius: 8px 8px 0 0;
+            padding: 0 10px;
+        }
+        
+        .tab-btn {
+            padding: 15px 24px;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .tab-btn:hover { color: var(--primary-color); }
+        
+        .tab-btn.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+        
+        .tab-content { display: none; animation: fadeIn 0.4s ease; }
+        .tab-content.active { display: block; }
+        
+        .signature-preview {
+            width: 250px;
+            height: 100px;
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8fafc;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-receipt"></i> InvoicePro</h2>
+                <div class="user-info">
+                    <div class="user-avatar" id="sidebarAvatar"><i class="fas fa-user-circle"></i></div>
+                    <div class="user-details">
+                        <span class="user-name" id="userName">Loading...</span>
+                        <span class="user-email" id="userEmail">...</span>
+                    </div>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="nav-item"><a href="dashboard.html" class="nav-link"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
+                    <li class="nav-item active"><a href="settings.html" class="nav-link"><i class="fas fa-cog"></i> <span>Settings</span></a></li>
+                    <li class="nav-item"><button id="logoutBtn" class="btn btn-logout" style="width:90%; margin:10px auto; display:flex;"><i class="fas fa-sign-out-alt"></i> Logout</button></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="main-header">
+                <div class="header-left">
+                    <h1><i class="fas fa-cog"></i> Complete Settings</h1>
+                </div>
+            </header>
+
+            <div class="settings-container">
+                
+                <div class="smart-tabs">
+                    <button class="tab-btn active" onclick="openTab('company')"><i class="fas fa-building"></i> Company Info</button>
+                    <button class="tab-btn" onclick="openTab('invoice')"><i class="fas fa-file-invoice"></i> Invoice Settings</button>
+                    <button class="tab-btn" onclick="openTab('account')"><i class="fas fa-user-shield"></i> Account (A-Z)</button>
+                </div>
+
+                <div id="company" class="tab-content active">
+                    <div class="settings-card">
+                        <div class="settings-header">
+                            <h3>Company Details</h3>
+                            <div class="settings-subtitle">Public information displayed on invoices</div>
+                        </div>
+                        <div class="settings-body">
+                            <div class="setting-group">
+                                <div class="setting-label">Company Logo</div>
+                                <div class="logo-upload">
+                                    <div class="logo-preview" id="mainLogoPreview"><i class="fas fa-image"></i></div>
+                                    <div class="logo-upload-controls">
+                                        <button class="btn btn-outline btn-sm" onclick="document.getElementById('mainLogoInput').click()"><i class="fas fa-upload"></i> Upload</button>
+                                        <input type="file" id="mainLogoInput" hidden accept="image/*">
+                                        <button class="btn btn-outline-danger btn-sm" onclick="removeImage('mainLogo')"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group half"><label>Company Name</label><input type="text" id="compName" class="form-control" placeholder="Business Name"></div>
+                                <div class="form-group half"><label>Web Address</label><input type="text" id="compWeb" class="form-control" placeholder="www.yourwebsite.com"></div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group half"><label>Phone Number</label><input type="text" id="compPhone" class="form-control" placeholder="+880 1xxx-xxxxxx"></div>
+                                <div class="form-group half"><label>Email Address</label><input type="email" id="compEmail" class="form-control" placeholder="info@company.com"></div>
+                            </div>
+
+                            <div class="form-group"><label>Address</label><textarea id="compAddress" class="form-control" rows="2"></textarea></div>
+
+                            <div class="form-row">
+                                <div class="form-group half">
+                                    <label><i class="fab fa-facebook"></i> Facebook URL</label>
+                                    <input type="text" id="compFb" class="form-control" placeholder="facebook.com/yourpage">
+                                </div>
+                                <div class="form-group half">
+                                    <label><i class="fab fa-whatsapp"></i> WhatsApp Number</label>
+                                    <input type="text" id="compWhatsapp" class="form-control" placeholder="WhatsApp Number">
+                                </div>
+                            </div>
+
+                            <div class="setting-group">
+                                <div class="setting-label">Extra Logos (Certifications/Partners)</div>
+                                <div class="form-row">
+                                    <div class="form-group half">
+                                        <label>Extra Logo 1</label>
+                                        <div class="logo-upload">
+                                            <div class="logo-preview" id="extra1Preview" style="width:60px; height:60px;"><i class="fas fa-star"></i></div>
+                                            <button class="btn btn-outline btn-sm" onclick="document.getElementById('extra1Input').click()">Upload</button>
+                                            <input type="file" id="extra1Input" hidden accept="image/*">
+                                        </div>
+                                    </div>
+                                    <div class="form-group half">
+                                        <label>Extra Logo 2</label>
+                                        <div class="logo-upload">
+                                            <div class="logo-preview" id="extra2Preview" style="width:60px; height:60px;"><i class="fas fa-award"></i></div>
+                                            <button class="btn btn-outline btn-sm" onclick="document.getElementById('extra2Input').click()">Upload</button>
+                                            <input type="file" id="extra2Input" hidden accept="image/*">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="settings-actions">
+                                <button class="btn btn-success" onclick="saveCompanySettings()"><i class="fas fa-save"></i> Save Company Info</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="invoice" class="tab-content">
+                    <div class="settings-card">
+                        <div class="settings-header">
+                            <h3>Invoice Configuration</h3>
+                            <div class="settings-subtitle">Customize footer, terms, and signatures</div>
+                        </div>
+                        <div class="settings-body">
+                            <div class="form-group">
+                                <label>Invoice Bottom Note</label>
+                                <textarea id="invBottomNote" class="form-control" rows="2" placeholder="e.g., Thank you for your business!"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label style="color: #e74c3c;">Warranty Warning / Terms</label>
+                                <textarea id="invWarranty" class="form-control" rows="3" placeholder="e.g., No warranty on physical damage. 7 days replacement warranty."></textarea>
+                            </div>
+
+                            <div class="setting-group">
+                                <div class="setting-label">Authorized Signature</div>
+                                <div class="signature-preview" id="signaturePreview">
+                                    <span style="color:#ccc">No Signature Uploaded</span>
+                                </div>
+                                <div class="logo-upload-controls">
+                                    <button class="btn btn-outline btn-sm" onclick="document.getElementById('sigInput').click()"><i class="fas fa-pen-nib"></i> Upload Signature</button>
+                                    <input type="file" id="sigInput" hidden accept="image/*">
+                                    <button class="btn btn-outline-danger btn-sm" onclick="removeImage('signature')"><i class="fas fa-trash"></i></button>
+                                </div>
+                                <div class="setting-hint">Upload a transparent PNG of the authorized signature.</div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Invoice Finish Line Text</label>
+                                <input type="text" id="invFinishLine" class="form-control" placeholder="e.g., This is a computer-generated invoice.">
+                            </div>
+
+                            <div class="settings-actions">
+                                <button class="btn btn-success" onclick="saveInvoiceSettings()"><i class="fas fa-save"></i> Save Invoice Settings</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="account" class="tab-content">
+                    <div class="settings-card">
+                        <div class="settings-header">
+                            <h3>Account Control (A-Z)</h3>
+                            <div class="settings-subtitle">Owner/Admin Profile Management</div>
+                        </div>
+                        <div class="settings-body">
+                            <div class="setting-group">
+                                <div class="setting-label">Profile Information</div>
+                                <div class="form-row">
+                                    <div class="form-group half"><label>Full Name</label><input type="text" id="accName" class="form-control"></div>
+                                    <div class="form-group half"><label>Email (Login ID)</label><input type="email" id="accEmail" class="form-control"></div>
+                                </div>
+                            </div>
+
+                            <div class="setting-group">
+                                <div class="setting-label">Security & Password</div>
+                                <div class="form-group"><label>Current Password</label><input type="password" id="currPass" class="form-control"></div>
+                                <div class="form-row">
+                                    <div class="form-group half"><label>New Password</label><input type="password" id="newPass" class="form-control"></div>
+                                    <div class="form-group half"><label>Confirm New Password</label><input type="password" id="confPass" class="form-control"></div>
+                                </div>
+                            </div>
+
+                            <div class="setting-group">
+                                <div class="setting-label">Owner Preferences</div>
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="prefEmailNotif"> <label for="prefEmailNotif">Email Notifications</label>
+                                </div>
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="prefAutoBackup"> <label for="prefAutoBackup">Auto-Backup Data</label>
+                                </div>
+                            </div>
+
+                            <div class="settings-actions">
+                                <button class="btn btn-success" onclick="saveAccountSettings()"><i class="fas fa-user-check"></i> Update Account</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="data/database.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/settings-complete.js"></script>
+</body>
+</html>
